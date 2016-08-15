@@ -1,0 +1,3 @@
+
+执行口令：
+	mvn exec:java -Dexec.mainClass="com.hand.SpringMybatisExam.App" 

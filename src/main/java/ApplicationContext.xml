@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:hadoop="http://www.springframework.org/schema/hadoop"
+	xmlns:cache="http://www.springframework.org/schema/cache" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+  http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+  http://www.springframework.org/schema/aop
+  http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+  http://www.springframework.org/schema/util
+  http://www.springframework.org/schema/util/spring-util-4.2.xsd
+  http://www.springframework.org/schema/hadoop
+  http://www.springframework.org/schema/hadoop/spring-hadoop-4.2.xsd
+  http://www.springframework.org/schema/cache
+  http://www.springframework.org/schema/cache/spring-cache-4.2.xsd
+  http://www.springframework.org/schema/mvc
+  http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd
+  http://www.springframework.org/schema/context  
+  http://www.springframework.org/schema/context/spring-context-4.2.xsd
+  http://www.springframework.org/schema/tx 
+  http://www.springframework.org/schema/tx/spring-tx-4.2.xsd"
+	default-autowire="byType">
+	<context:component-scan base-package="com.hand.springWebProj" />
+	<!-- 获取property文件 -->
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:com/hand/dbconfig.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 配置数据源 -->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+		destroy-method="close">
+		<property name="driverClass" value="${driver}"></property>
+		<property name="jdbcUrl" value="${url}" />
+		<property name="overrideDefaultUser" value="${userName}"></property>
+		<property name="overrideDefaultPassword" value="${password}"></property>
+		<property name="user" value="root" />
+		<property name="password" value="rootroot" />
+		<property name="maxPoolSize" value="20" />
+		<property name="minPoolSize" value="5" />
+		<property name="acquireIncrement" value="3" />
+		<property name="initialPoolSize" value="5" />
+	</bean>
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="typeAliasesPackage" value="com.hand.SpringMybatisExam.bean"/>
+		<property name="mapperLocations" value="classpath:com/hand/SpringMybatisExam/config/*Mapper.xml" />
+	</bean>
+	<bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+		<constructor-arg index="0" ref="sqlSessionFactory"/>
+	</bean>
+	<bean id="BaseDao" abstract="true">
+		<property name="sqlSessionTemplate" ref="sqlSessionTemplate"/>
+	</bean>
+	
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+	
+	<tx:advice id="txAdvice" transaction-manager="transactionManager">
+		<tx:attributes>		
+			<tx:method name="delete*" propagation="REQUIRED" read-only="false" rollback-for="java.lang.RuntimeException"/>
+			<tx:method name="add*" propagation="REQUIRED" read-only="false"/>
+			<tx:method name="edit*" propagation="REQUIRED" read-only="false"/>
+			<tx:method name="query*" propagation="REQUIRED" read-only="false"/>
+			<tx:method name="*" propagation="SUPPORTS" read-only="true"/>
+		</tx:attributes>
+	</tx:advice>
+	<aop:config>									
+		<aop:pointcut id="pc" expression="execution(* com.hand.SpringMybatisExam.service.serviceImpl.*.*(..))"/>
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="pc" />	
+	</aop:config>
+	
+	<bean id="customerManageDao" class="com.hand.SpringMybatisExam.dao.CustomerManageDao" parent="BaseDao">
+	</bean>
+	
+	<bean id="addressManageDao" class="com.hand.SpringMybatisExam.dao.AddressManageDao" parent="BaseDao">
+	</bean>
+	<bean id="customerManageService" class="com.hand.SpringMybatisExam.service.serviceImpl.CustomerManageServiceImpl">
+	</bean>
+	<bean id="addressManageService" class="com.hand.SpringMybatisExam.service.serviceImpl.AddressManageServiceImpl">
+	</bean>
+	<bean id="addFilmEventListener" class="com.hand.SpringMybatisExam.service.event.AddFilmEventListener">
+	</bean>
+	<bean id="customerDataPrepare" class="com.hand.SpringMybatisExam.Util.CustomerDataPrepare">
+	</bean>
+	
+</beans>
