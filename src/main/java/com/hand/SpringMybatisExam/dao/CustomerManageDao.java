@@ -26,7 +26,20 @@ public class CustomerManageDao extends SqlSessionDaoSupport {
 
 	public int deleteCustomerById(int customerId) {
 		String sqlId=".deleteCustomerById";
+		deletePaymentByCustomerId(customerId);
+		deleteRentalByCustomerId(customerId);
 		int i=getSqlSession().delete(className+sqlId, customerId);
+		return i;
+	}
+	public int deletePaymentByCustomerId(int customerId){
+		String sqlId=".deletePaymentByCustomerId";
+		int i=getSqlSession().delete(className+sqlId, customerId);
+		return i;
+		
+	}
+	public int deleteRentalByCustomerId(int customer_id){
+		String sqlId=".deleteRentalByCustomerId";
+		int i=getSqlSession().delete(className+sqlId, customer_id);
 		return i;
 	}
 

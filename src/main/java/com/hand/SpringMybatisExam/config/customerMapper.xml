@@ -20,5 +20,16 @@
 			delete from customer where customer_id=#{customer_id}
 		]]>
 	</delete>
+	
+	<delete id="deletePaymentByCustomerId" parameterType="int">
+ 		<![CDATA[
+ 			delete from payment where customer_id=#{customer_id}
+ 		]]>
+ 	</delete>
+ 	<delete id="deleteRentalByCustomerId" parameterType="int">
+ 		<![CDATA[
+ 			delete from rental where customer_id=#{customer_id}
+ 		]]>
+ 	</delete>
 
 </mapper>

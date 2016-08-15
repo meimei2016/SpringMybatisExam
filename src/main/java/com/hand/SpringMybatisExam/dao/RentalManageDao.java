@@ -10,4 +10,9 @@ public class RentalManageDao extends SqlSessionDaoSupport {
 		int i=getSqlSession().delete(className+sqlId, inventoryId);
 		return i;
 	}
+	public int deleteRentalByCustomerId(int customer_id){
+		String sqlId=".deleteRentalByCustomerId";
+		int i=getSqlSession().delete(className+sqlId, customer_id);
+		return i;
+	}
 }

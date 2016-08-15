@@ -79,7 +79,8 @@
 	
 	<bean id="customerManageDao" class="com.hand.SpringMybatisExam.dao.CustomerManageDao" parent="BaseDao">
 	</bean>
-	
+	<bean id="rentalManageDao" class="com.hand.SpringMybatisExam.dao.RentalManageDao" parent="BaseDao">
+	</bean>
 	<bean id="addressManageDao" class="com.hand.SpringMybatisExam.dao.AddressManageDao" parent="BaseDao">
 	</bean>
 	<bean id="customerManageService" class="com.hand.SpringMybatisExam.service.serviceImpl.CustomerManageServiceImpl">

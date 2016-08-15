@@ -6,4 +6,9 @@
  			delete from rental where inventory_id=LOWER(#{inventory_id})
  		]]>
  	</delete>
+ 	<delete id="deleteRentalByCustomerId" parameterType="int">
+ 		<![CDATA[
+ 			delete from rental where customer_id=#{customer_id}
+ 		]]>
+ 	</delete>
 </mapper>
