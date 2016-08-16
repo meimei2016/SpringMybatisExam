@@ -13,7 +13,7 @@ public class App {
 				CustomerDataPrepare.class);
 		customerDataPrepare.getCustomerInfo();
 		customerDataPrepare.dataCheck();
-		customerDataPrepare.outPutLastCustomer();
+		
 		System.out.println("请输入要删除的Customer的ID:");
 		customerDataPrepare.deleteCustomerById();
 	}

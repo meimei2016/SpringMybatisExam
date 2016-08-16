@@ -13,7 +13,7 @@ public class CustomerManageDao extends SqlSessionDaoSupport {
 	}
 	
 	public Customer getLastCustomer(){
-		String sqlId=".getCustomerByFistName";
+		String sqlId=".getLastCustomer";
 		Customer customer=getSqlSession().selectOne(className+sqlId);
 		return customer;
 	}

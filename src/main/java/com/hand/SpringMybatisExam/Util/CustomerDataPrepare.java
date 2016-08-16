@@ -1,5 +1,6 @@
 package com.hand.SpringMybatisExam.Util;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,14 @@ public class CustomerDataPrepare {
 				if(email.matches("[\\w]*@[\\w]*\\.com$")){
 					customer.setEmail(email);
 					System.out.println("请输入AddressId:");
-					int addressId=scn.nextInt();
-					customer.setAddress_id(addressId);
+					try{
+						int addressId=scn.nextInt();
+						customer.setAddress_id(addressId);
+					}catch (InputMismatchException e){
+						System.out.println("输入错误，请输入一个整数");
+						int addressId=scn.nextInt();
+						customer.setAddress_id(addressId);
+					}
 				}
 			}
 		}
@@ -53,14 +60,15 @@ public class CustomerDataPrepare {
 			dataCheck();
 		}		
 	}
-	
 	public void outPutLastCustomer(){
+		System.out.println("已保存的数据如下：");
 		Customer customer1=customerManageService.getLastCustomer();	
-		System.out.println("first_name:"+customer1.getFirst_name());
-		System.out.println("last_name:"+customer1.getLast_name());
-		System.out.println("email:"+customer1.getEmail());
-		System.out.println("address="+customer1.getAddress());
-		System.out.println("create_date="+customer1.getCreate_date());
+		System.out.println("ID:"+customer1.getCustomer_id());
+		System.out.println("FirstName:"+customer1.getFirst_name());
+		System.out.println("LastName:"+customer1.getLast_name());
+		System.out.println("Email:"+customer1.getEmail());
+		System.out.println("Address:"+customer1.getAddress());
+		System.out.println("CreateDate:"+customer1.getCreate_date());
 	}
 	
 	public void deleteCustomerById(){
@@ -71,9 +79,9 @@ public class CustomerDataPrepare {
 			System.out.println("你输入的ID为"+customerId+"的Customer已经删除.");
 			scn1.close();
 		}else{
+			scn1.close();
 			System.out.println("你输入的Customer的ID不存在,请重新输入:");
 			deleteCustomerById();
-			
 		}
 	}
 }
