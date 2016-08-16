@@ -1,3 +1,5 @@
 
 执行口令：
 	mvn exec:java -Dexec.mainClass="com.hand.SpringMybatisExam.App" 
+按CustomerId 删除的执行口令：
+	mvn exec:java -Dexec.mainClass="com.hand.SpringMybatisExam.DeleteCustomer"

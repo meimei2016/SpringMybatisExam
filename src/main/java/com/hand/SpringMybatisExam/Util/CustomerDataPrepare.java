@@ -41,6 +41,8 @@ public class CustomerDataPrepare {
 						int addressId=scn.nextInt();
 						customer.setAddress_id(addressId);
 					}
+				}else{
+					System.out.println("您输入的Email格式不对:");
 				}
 			}
 		}
@@ -72,16 +74,20 @@ public class CustomerDataPrepare {
 	}
 	
 	public void deleteCustomerById(){
-		Scanner scn1=new Scanner(System.in);
-		int customerId=scn1.nextInt();
-		int i=customerManageService.deleteCustomerById(customerId);
-		if(i>0){
-			System.out.println("你输入的ID为"+customerId+"的Customer已经删除.");
-			scn1.close();
-		}else{
-			scn1.close();
-			System.out.println("你输入的Customer的ID不存在,请重新输入:");
-			deleteCustomerById();
-		}
+		Scanner scn=new Scanner(System.in);
+		int customerId=0;
+		int i=0;
+		boolean a=true;
+		do{
+			customerId=scn.nextInt();
+			i=customerManageService.deleteCustomerById(customerId);
+			if(i>0){
+				System.out.println("你输入的ID为"+customerId+"的Customer已经删除.");
+				scn.close();
+				a=false;
+			}else{
+				System.out.println("你输入的Customer的ID不存在,请重新输入:");
+			}
+		}while(a);
 	}
 }
