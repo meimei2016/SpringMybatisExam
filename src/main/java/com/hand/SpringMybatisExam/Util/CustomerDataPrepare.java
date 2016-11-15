@@ -17,10 +17,9 @@ public class CustomerDataPrepare {
 	
 	Customer customer=new Customer();
 	
-	public Customer getCustomerInfo(){
+	public Customer getCustomerInfo(Scanner scn){
 		customer.setStore_id(1);
-		System.out.println("请输入FirstName(first_name):");
-		Scanner scn=new Scanner(System.in);		
+		System.out.println("请输入FirstName(first_name):");	
 		String firstName=scn.next().trim();
 		if(!firstName.isEmpty()){
 			customer.setFirst_name(firstName);
@@ -29,37 +28,31 @@ public class CustomerDataPrepare {
 			if(!lastName.isEmpty()){
 				customer.setLast_name(lastName);
 				System.out.println("请输入Email(email):");
-				String email=scn.next().trim();
-				if(email.matches("[\\w]*@[\\w]*\\.com$")){
-					customer.setEmail(email);
-					System.out.println("请输入AddressId:");
-					try{
-						int addressId=scn.nextInt();
-						customer.setAddress_id(addressId);
-					}catch (InputMismatchException e){
-						System.out.println("输入错误，请输入一个整数");
-						int addressId=scn.nextInt();
-						customer.setAddress_id(addressId);
+				boolean c=true;
+				String email="";
+				do{
+					email=scn.next().trim();
+					if(email.matches("[\\w]*@[\\w]*\\.com$")){
+						customer.setEmail(email);
+						getAddressId(scn);
+						c=false;
+					}else{
+						System.out.println("您输入的Email格式不对:");
 					}
-				}else{
-					System.out.println("您输入的Email格式不对:");
-				}
+				}while(c);
 			}
 		}
-		scn.close();
 		return customer;		
 	}
-	public void dataCheck(){
+	public void dataCheck(Scanner scn){
 		int i=addressManageService.addressIdCheck(customer.getAddress_id());
 		if(i>0){
 			customerManageService.addCustomer(customer);
 		}else{
 			System.out.println("你输入的AddressID不存在,请重新输入:");
-			Scanner scn3=new Scanner(System.in);
-			int addressId=scn3.nextInt();
+			int addressId=scn.nextInt();
 			customer.setAddress_id(addressId);
-			scn3.close();
-			dataCheck();
+			dataCheck(scn);
 		}		
 	}
 	public void outPutLastCustomer(){
@@ -73,21 +66,39 @@ public class CustomerDataPrepare {
 		System.out.println("CreateDate:"+customer1.getCreate_date());
 	}
 	
-	public void deleteCustomerById(){
-		Scanner scn=new Scanner(System.in);
+	public void deleteCustomerById(Scanner scn){
 		int customerId=0;
 		int i=0;
 		boolean a=true;
+		System.out.println("请输入要删除的Customer的ID:");
 		do{
 			customerId=scn.nextInt();
 			i=customerManageService.deleteCustomerById(customerId);
 			if(i>0){
 				System.out.println("你输入的ID为"+customerId+"的Customer已经删除.");
-				scn.close();
 				a=false;
 			}else{
 				System.out.println("你输入的Customer的ID不存在,请重新输入:");
 			}
 		}while(a);
+	}
+	
+	public void getAddressId(Scanner scn){
+		boolean check=true;
+		int addressId=0;
+		System.out.println("请输入AddressId:");
+		do{
+			try{
+				addressId=scn.nextInt();
+				if(addressId>0){
+					customer.setAddress_id(addressId);
+					check=false;
+				}else{
+					System.out.println("输入错误，请输入一个正整数");	
+				}
+			}catch (InputMismatchException e){
+				System.out.println("输入错误，请输入一个整数");
+			}						
+		}while(check);
 	}
 }
